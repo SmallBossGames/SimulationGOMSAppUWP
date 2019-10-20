@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SimualtionGOMSApp_UWP</RootNamespace>
     <AssemblyName>SimualtionGOMSApp_UWP</AssemblyName>
-    <DefaultLanguage>ru-RU</DefaultLanguage>
+    <DefaultLanguage>ru-ru</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -119,11 +119,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\StringNumberConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\NodeMappingModel.cs" />
     <Compile Include="Models\OuterNodeModel.cs" />
+    <Compile Include="Models\SimulationParmetersModel.cs" />
     <Compile Include="Models\TimeFromErrorPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimualtionGOMS\Node.cs" />

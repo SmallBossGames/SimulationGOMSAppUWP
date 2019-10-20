@@ -29,8 +29,70 @@ namespace SimualtionGOMSApp_UWP
         {
             ViewModel = new MainPageViewModel();
             this.InitializeComponent();
+
+            MinErrorNumBox.Minimum = MaxErrorNumBox.Minimum = 0;
+            MinErrorNumBox.Maximum = MaxErrorNumBox.Maximum = 1;
+            StepErrorNumBox.Minimum = 0;
+            StepErrorNumBox.Maximum = 100000;
+
+            HandsTimeNumBox.Minimum = 
+                KeyboardTimeNumBox.Minimum = 
+                PositionTimeNumBox.Minimum = 
+                MenthalTimeNumBox.Minimum = 0;
+
+            HandsTimeNumBox.Maximum =
+                KeyboardTimeNumBox.Maximum =
+                PositionTimeNumBox.Maximum =
+                MenthalTimeNumBox.Maximum = 1000000;
         }
 
         MainPageViewModel ViewModel { get; }
+
+        private void AddNode_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OuterNodes.Add(new Models.OuterNodeModel());
+        }
+
+        private void RemoveNode_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SelectedOtherNodeIndex < 0)
+                return;
+
+            ViewModel.OuterNodes.RemoveAt(ViewModel.SelectedOtherNodeIndex);
+        }
+
+        private void AddMapping_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.NodeMappings.Add(new Models.NodeMappingModel());
+        }
+
+        private void RemoveMapping_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SelectedNodeMapIndex < 0)
+                return;
+
+            ViewModel.NodeMappings.RemoveAt(ViewModel.SelectedNodeMapIndex);
+        }
+
+        private void Simulate_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SimulationRange();
+        }
+
+        private void NumberFieldChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            var selectionPos = sender.SelectionStart;
+            if (double.TryParse(sender.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var result))
+            {
+                sender.Text = result.ToString();
+            }
+            else
+            {
+                sender.Text = "0";
+            }
+            sender.SelectionStart = selectionPos;
+        }
+
+
     }
 }
