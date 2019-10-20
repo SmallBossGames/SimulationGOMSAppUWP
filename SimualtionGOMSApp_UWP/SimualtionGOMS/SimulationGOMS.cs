@@ -26,7 +26,7 @@ namespace SimualtionGOMSApp_UWP.SimualtionGOMS
                 timeSum += currentNode.Time;
 
                 var errorTest = random.NextDouble();
-                if(errorTest > errorProbability)
+                if(errorTest < errorProbability)
                 {
                     if (currentNode.Parent != null)
                     {

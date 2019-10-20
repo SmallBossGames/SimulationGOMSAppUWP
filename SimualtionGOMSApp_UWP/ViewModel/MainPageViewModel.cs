@@ -78,7 +78,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
             TimeErrorPairs.Clear();
 
-            for (int i = 0; i < SimulationParmeters.StepError; i++)
+            for (int i = 0; i <= SimulationParmeters.StepError; i++)
             {
                 var errorPropability = SimulationParmeters.MinError + i * stepError;
                 var result = SimualtionGOMS.SimulationGOMS.Simulate(parameters, outerNodes, mapping, errorPropability);

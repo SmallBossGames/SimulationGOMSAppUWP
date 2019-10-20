@@ -160,25 +160,25 @@
             </Button>
         </Grid>
         <telerikChart:RadCartesianChart Grid.Column="1" Margin="5" PaletteName="DefaultDark">
-            <telerikChart:LineSeries ItemsSource="{x:Bind ViewModel.TimeErrorPairs}">
-                <telerikChart:LineSeries.HorizontalAxis>
-                    <telerikChart:CategoricalAxis VerticalLocation="Bottom" />
-                </telerikChart:LineSeries.HorizontalAxis>
-                <telerikChart:LineSeries.VerticalAxis>
-                    <telerikChart:LinearAxis HorizontalLocation="Left" />
-                </telerikChart:LineSeries.VerticalAxis>
-                <telerikChart:LineSeries.CategoryBinding>
+            <telerikChart:ScatterLineSeries ItemsSource="{x:Bind ViewModel.TimeErrorPairs}">
+                <telerikChart:ScatterLineSeries.HorizontalAxis>
+                    <telerikChart:LinearAxis/>
+                </telerikChart:ScatterLineSeries.HorizontalAxis>
+                <telerikChart:ScatterLineSeries.VerticalAxis>
+                    <telerikChart:LinearAxis/>
+                </telerikChart:ScatterLineSeries.VerticalAxis>
+                <telerikChart:ScatterLineSeries.XValueBinding>
                     <telerikChart:PropertyNameDataPointBinding PropertyName="Error"/>
-                </telerikChart:LineSeries.CategoryBinding>
-                <telerikChart:LineSeries.ValueBinding>
+                </telerikChart:ScatterLineSeries.XValueBinding>
+                <telerikChart:ScatterLineSeries.YValueBinding>
                     <telerikChart:PropertyNameDataPointBinding PropertyName="Time"/>
-                </telerikChart:LineSeries.ValueBinding>
-                <telerikChart:LineSeries.PointTemplate>
+                </telerikChart:ScatterLineSeries.YValueBinding>
+                <telerikChart:ScatterLineSeries.PointTemplate>
                     <DataTemplate>
                         <Ellipse Width="20" Height="20"/>
                     </DataTemplate>
-                </telerikChart:LineSeries.PointTemplate>
-            </telerikChart:LineSeries>
+                </telerikChart:ScatterLineSeries.PointTemplate>
+            </telerikChart:ScatterLineSeries>
         </telerikChart:RadCartesianChart>
     </Grid>
 </Page>
