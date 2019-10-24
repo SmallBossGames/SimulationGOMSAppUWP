@@ -29,7 +29,7 @@ namespace SimualtionGOMSApp_UWP.SimualtionGOMS
 
             foreach (var (value, node) in NextNodes)
             {
-                sum += sum + value / uncheckedNodesSum;
+                sum += value / uncheckedNodesSum;
                 if (sum >= randomValue)
                     return node;
             }

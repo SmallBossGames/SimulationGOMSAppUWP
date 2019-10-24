@@ -65,6 +65,8 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
         public void SimulationRange()
         {
+            const double simulationItCount = 1000; 
+
             if (SimulationParmeters.StepError < 1)
                 return;
 
@@ -80,9 +82,18 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
             for (int i = 0; i <= SimulationParmeters.StepError; i++)
             {
+                var avgResult = 0.0;
                 var errorPropability = SimulationParmeters.MinError + i * stepError;
-                var result = SimualtionGOMS.SimulationGOMS.Simulate(parameters, outerNodes, mapping, errorPropability);
-                var tePair = new TimeFromErrorPair { Error = errorPropability, Time = result };
+
+                for (var j = 0; j < simulationItCount; j++)
+                {
+                    avgResult += SimualtionGOMS.SimulationGOMS.Simulate(parameters, outerNodes, mapping, errorPropability);
+                }
+
+                avgResult /= simulationItCount;
+
+                var tePair = new TimeFromErrorPair { Error = errorPropability, Time = avgResult };
+
                 TimeErrorPairs.Add(tePair);
             }
         }
