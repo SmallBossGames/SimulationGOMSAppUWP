@@ -59,8 +59,9 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 positioning: SimulationParmeters.Positioning);
 
             var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
+            var graph = SimualtionGOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
-            return SimualtionGOMS.SimulationGOMS.Simulate(parameters, outerNodes, mapping, errorPropability);
+            return SimualtionGOMS.SimulationGOMS.Simulate(graph, errorPropability);
         }
 
         public void SimulationRange()
@@ -77,6 +78,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 positioning: SimulationParmeters.Positioning);
             var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
             var stepError = (SimulationParmeters.MaxError - SimulationParmeters.MinError) / SimulationParmeters.StepError;
+            var graph = SimualtionGOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
             TimeErrorPairs.Clear();
 
@@ -87,7 +89,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
                 for (var j = 0; j < simulationItCount; j++)
                 {
-                    avgResult += SimualtionGOMS.SimulationGOMS.Simulate(parameters, outerNodes, mapping, errorPropability);
+                    avgResult += SimualtionGOMS.SimulationGOMS.Simulate(graph, errorPropability);
                 }
 
                 avgResult /= simulationItCount;
