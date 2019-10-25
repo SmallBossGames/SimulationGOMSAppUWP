@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimualtionGOMSApp_UWP.SimualtionGOMS
+namespace SimualtionGOMSApp_UWP.GOMS
 {
     public static class SimulationGOMS
     {
@@ -50,45 +50,18 @@ namespace SimualtionGOMSApp_UWP.SimualtionGOMS
             }
 
             return timeSum;
-
-            /*var currentNode = new Node(false, 0.0);
-            currentNode.NextNodes.Add((1.0, rootNode));
-
-            var timeSum = 0.0;
-            var random = new Random();
-
-            var graphMovingStack = new Stack<Node>();
-
-            while (true)
-            {
-                timeSum += currentNode.Time;
-
-                var errorTest = random.NextDouble();
-                if (errorTest < errorProbability)
-                {
-                    if (graphMovingStack.Count!=0)
-                    {
-                        currentNode = graphMovingStack.Pop();
-                    }
-                    continue;
-                }
-
-                if (currentNode.IsEndNode)
-                    break;
-
-                var nextNode = currentNode.GoNextRandomNode(random);
-
-                if (nextNode == null)
-                    throw new NullReferenceException();
-
-                nextNode.Parent = currentNode;
-                currentNode = nextNode;
-            }
-
-            return timeSum;*/
         }
 
         public static Node BuildGraph(
+            in Parameters parameters,
+            OuterNode[] outerNodes,
+            (int, int, double)[] nodesMapping)
+        {
+            var tempNodes = BuildGraphNodes(parameters, outerNodes, nodesMapping);
+            return tempNodes[0];
+        }
+
+        public static Node[] BuildGraphNodes(
             in Parameters parameters,
             OuterNode[] outerNodes,
             (int, int, double)[] nodesMapping)
@@ -110,7 +83,7 @@ namespace SimualtionGOMSApp_UWP.SimualtionGOMS
                 tempNodes[from].NextNodes.Add(tuple);
             }
 
-            return tempNodes[0];
+            return tempNodes;
         }
     }
 }

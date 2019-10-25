@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimualtionGOMSApp_UWP.SimualtionGOMS
+namespace SimualtionGOMSApp_UWP.GOMS
 {
     public readonly struct OuterNode
     {

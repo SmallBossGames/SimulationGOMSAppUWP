@@ -132,7 +132,11 @@
     <Compile Include="SimualtionGOMS\OuterNode.cs" />
     <Compile Include="SimualtionGOMS\Parameters.cs" />
     <Compile Include="SimualtionGOMS\SimulationGOMS.cs" />
+    <Compile Include="SimulationWorkstation\ErrorFixProcess.cs" />
+    <Compile Include="SimulationWorkstation\Helpers.cs" />
+    <Compile Include="SimulationWorkstation\ISimulationProcess.cs" />
     <Compile Include="SimulationWorkstation\ManagementProcess.cs" />
+    <Compile Include="SimulationWorkstation\Workstation.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

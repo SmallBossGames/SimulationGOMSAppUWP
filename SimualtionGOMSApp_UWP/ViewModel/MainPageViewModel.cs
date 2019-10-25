@@ -52,16 +52,16 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
         public double Simulation(double errorPropability)
         {
-            var parameters = new SimualtionGOMS.Parameters(
+            var parameters = new GOMS.Parameters(
                 keyboard: SimulationParmeters.Keyboard,
                 handMoving: SimulationParmeters.HandMoving,
                 menthal: SimulationParmeters.Menthal,
                 positioning: SimulationParmeters.Positioning);
 
             var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
-            var graph = SimualtionGOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
+            var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
-            return SimualtionGOMS.SimulationGOMS.Simulate(graph, errorPropability);
+            return GOMS.SimulationGOMS.Simulate(graph, errorPropability);
         }
 
         public void SimulationRange()
@@ -71,14 +71,14 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             if (SimulationParmeters.StepError < 1)
                 return;
 
-            var parameters = new SimualtionGOMS.Parameters(
+            var parameters = new GOMS.Parameters(
                 keyboard: SimulationParmeters.Keyboard,
                 handMoving: SimulationParmeters.HandMoving,
                 menthal: SimulationParmeters.Menthal,
                 positioning: SimulationParmeters.Positioning);
             var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
             var stepError = (SimulationParmeters.MaxError - SimulationParmeters.MinError) / SimulationParmeters.StepError;
-            var graph = SimualtionGOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
+            var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
             TimeErrorPairs.Clear();
 
@@ -89,7 +89,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
 
                 for (var j = 0; j < simulationItCount; j++)
                 {
-                    avgResult += SimualtionGOMS.SimulationGOMS.Simulate(graph, errorPropability);
+                    avgResult += GOMS.SimulationGOMS.Simulate(graph, errorPropability);
                 }
 
                 avgResult /= simulationItCount;
@@ -100,28 +100,28 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             }
         }
 
-        static private SimualtionGOMS.Token[] ParseGomsTokens(string source)
+        static private GOMS.Token[] ParseGomsTokens(string source)
         {
-            var tokens = new List<SimualtionGOMS.Token>(source.Length);
+            var tokens = new List<GOMS.Token>(source.Length);
             foreach (var item in source)
             {
                 switch (item)
                 {
                     case 'M':
                     case 'm':
-                        tokens.Add(SimualtionGOMS.Token.menthal);
+                        tokens.Add(GOMS.Token.menthal);
                         break;
                     case 'H':
                     case 'h':
-                        tokens.Add(SimualtionGOMS.Token.handMoving);
+                        tokens.Add(GOMS.Token.handMoving);
                         break;
                     case 'K':
                     case 'k':
-                        tokens.Add(SimualtionGOMS.Token.keyboard);
+                        tokens.Add(GOMS.Token.keyboard);
                         break;
                     case 'P':
                     case 'p':
-                        tokens.Add(SimualtionGOMS.Token.positioning);
+                        tokens.Add(GOMS.Token.positioning);
                         break;
                     default:
                         break;
@@ -130,11 +130,11 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             return tokens.ToArray();
         }
 
-        static private (SimualtionGOMS.OuterNode[], (int, int, double)[]) ConvertOuterNodes(
+        static private (GOMS.OuterNode[], (int, int, double)[]) ConvertOuterNodes(
             Collection<OuterNodeModel> outerNodeModels,
             Collection<NodeMappingModel> mappingModels)
         {
-            var outerNodes = new SimualtionGOMS.OuterNode[outerNodeModels.Count];
+            var outerNodes = new GOMS.OuterNode[outerNodeModels.Count];
             var nodeMapping = new (int, int, double)[mappingModels.Count];
            
             var nameIndexMatch = new Dictionary<string, int>();
@@ -142,7 +142,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             for (int i = 0; i < outerNodes.Length; i++)
             {
                 var current = outerNodeModels[i];
-                outerNodes[i] = new SimualtionGOMS.OuterNode(
+                outerNodes[i] = new GOMS.OuterNode(
                     isEndNode: current.IsEndNode,
                     gomsTokens: ParseGomsTokens(current.GOMSChars));
                 nameIndexMatch.Add(current.Name, i);

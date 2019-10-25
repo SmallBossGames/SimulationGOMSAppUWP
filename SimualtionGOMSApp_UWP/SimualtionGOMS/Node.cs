@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace SimualtionGOMSApp_UWP.SimualtionGOMS
+namespace SimualtionGOMSApp_UWP.GOMS
 {
     public class Node
     {
