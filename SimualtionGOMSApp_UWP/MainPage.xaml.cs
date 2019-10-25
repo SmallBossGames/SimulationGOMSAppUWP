@@ -5,16 +5,15 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-
-using System.Collections.ObjectModel;
-using SimualtionGOMSApp_UWP.ViewModel;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -27,72 +26,93 @@ namespace SimualtionGOMSApp_UWP
     {
         public MainPage()
         {
-            ViewModel = new MainPageViewModel();
             this.InitializeComponent();
-
-            MinErrorNumBox.Minimum = MaxErrorNumBox.Minimum = 0;
-            MinErrorNumBox.Maximum = MaxErrorNumBox.Maximum = 1;
-            StepErrorNumBox.Minimum = 0;
-            StepErrorNumBox.Maximum = 100000;
-
-            HandsTimeNumBox.Minimum = 
-                KeyboardTimeNumBox.Minimum = 
-                PositionTimeNumBox.Minimum = 
-                MenthalTimeNumBox.Minimum = 0;
-
-            HandsTimeNumBox.Maximum =
-                KeyboardTimeNumBox.Maximum =
-                PositionTimeNumBox.Maximum =
-                MenthalTimeNumBox.Maximum = 1000000;
         }
 
-        MainPageViewModel ViewModel { get; }
+        private readonly List<(string Tag, Type Page)> pages = new List<(string Tag, Type Page)>();
 
-        private void AddNode_Click(object sender, RoutedEventArgs e)
+        private void MainNavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            ViewModel.OuterNodes.Add(new Models.OuterNodeModel());
+            var navItemTag = args.InvokedItemContainer.Tag.ToString();
+            NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
         }
 
-        private void RemoveNode_Click(object sender, RoutedEventArgs e)
+        private void NavView_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
         {
-            if (ViewModel.SelectedOtherNodeIndex < 0)
-                return;
+            var item = pages.FirstOrDefault(p => p.Tag.Equals(navItemTag, StringComparison.Ordinal));
+            var page = item.Page;
+            var preNavPageType = ContentFrame.CurrentSourcePageType;
 
-            ViewModel.OuterNodes.RemoveAt(ViewModel.SelectedOtherNodeIndex);
-        }
-
-        private void AddMapping_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.NodeMappings.Add(new Models.NodeMappingModel());
-        }
-
-        private void RemoveMapping_Click(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel.SelectedNodeMapIndex < 0)
-                return;
-
-            ViewModel.NodeMappings.RemoveAt(ViewModel.SelectedNodeMapIndex);
-        }
-
-        private void Simulate_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.SimulationRange();
-        }
-
-        private void NumberFieldChanging(TextBox sender, TextBoxTextChangingEventArgs args)
-        {
-            var selectionPos = sender.SelectionStart;
-            if (double.TryParse(sender.Text, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var result))
+            if (!(page is null) && !Equals(preNavPageType, page))
             {
-                sender.Text = result.ToString();
+                ContentFrame.Navigate(page, null, transitionInfo);
             }
-            else
-            {
-                sender.Text = "0";
-            }
-            sender.SelectionStart = selectionPos;
         }
 
+        private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+        }
 
+        private void On_Navigated(object sender, NavigationEventArgs e)
+        {
+            MainNavView.IsBackEnabled = ContentFrame.CanGoBack;
+
+            var item = pages.FirstOrDefault(p => p.Page == e.SourcePageType);
+
+            MainNavView.SelectedItem = MainNavView.MenuItems
+                .OfType<NavigationViewItem>()
+                .First(n => n.Tag.Equals(item.Tag));
+
+            MainNavView.Header =
+                ((NavigationViewItem)MainNavView.SelectedItem)?.Content?.ToString();
+
+        }
+
+        private void MainNavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args) 
+            => On_BackRequested();
+
+        private bool On_BackRequested()
+        {
+            if (!ContentFrame.CanGoBack)
+                return false;
+
+            if (MainNavView.IsPaneOpen &&
+                (MainNavView.DisplayMode == NavigationViewDisplayMode.Compact ||
+                 MainNavView.DisplayMode == NavigationViewDisplayMode.Minimal))
+                return false;
+
+            ContentFrame.GoBack();
+            return true;
+        }
+
+        private void MainNavView_Loaded(object sender, RoutedEventArgs e)
+        {
+            pages.Add(("lab1", typeof(Pages.GOMSSimulationPage)));
+            pages.Add(("lab2", typeof(Pages.WorkstationSimulationPage)));
+
+
+            ContentFrame.Navigated += On_Navigated;
+            MainNavView.SelectedItem = MainNavView.MenuItems[0];
+            NavView_Navigate("lab1", new EntranceNavigationTransitionInfo());
+
+            var goBack = new KeyboardAccelerator { Key = VirtualKey.GoBack };
+            goBack.Invoked += BackInvoked;
+            this.KeyboardAccelerators.Add(goBack);
+
+            var altLeft = new KeyboardAccelerator
+            {
+                Key = VirtualKey.Left,
+                Modifiers = VirtualKeyModifiers.Menu
+            };
+            altLeft.Invoked += BackInvoked;
+            this.KeyboardAccelerators.Add(altLeft);
+        }
+
+        private void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            On_BackRequested();
+            args.Handled = true;
+        }
     }
 }
