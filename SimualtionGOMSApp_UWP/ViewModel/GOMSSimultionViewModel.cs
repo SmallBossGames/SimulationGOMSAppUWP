@@ -8,18 +8,11 @@ using System.Threading.Tasks;
 
 namespace SimualtionGOMSApp_UWP.ViewModel
 {
-    public class MainPageViewModel
+    public sealed class GOMSSimultionViewModel
     {
-        public MainPageViewModel()
+        public GOMSSimultionViewModel()
         {
             TimeErrorPairs = new ObservableCollection<TimeFromErrorPair>();
-            /*{
-                new TimeFromErrorPair{Error=0.1, Time=6.5},
-                new TimeFromErrorPair{Error=0.2, Time=6.5},
-                new TimeFromErrorPair{Error=0.3, Time=9.5},
-                new TimeFromErrorPair{Error=0.4, Time=2.5},
-                new TimeFromErrorPair{Error=0.5, Time=7.5},
-            };*/
             OuterNodes = new ObservableCollection<OuterNodeModel>()
             {
                 new OuterNodeModel{Name = "Первый", GOMSChars="MHPHK", IsEndNode=false},
@@ -58,7 +51,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 menthal: SimulationParmeters.Menthal,
                 positioning: SimulationParmeters.Positioning);
 
-            var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
+            var (outerNodes, mapping) = Helpers.ConvertOuterNodes(OuterNodes, NodeMappings);
             var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
             return GOMS.SimulationGOMS.Simulate(graph, errorPropability);
@@ -76,7 +69,7 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 handMoving: SimulationParmeters.HandMoving,
                 menthal: SimulationParmeters.Menthal,
                 positioning: SimulationParmeters.Positioning);
-            var (outerNodes, mapping) = ConvertOuterNodes(OuterNodes, NodeMappings);
+            var (outerNodes, mapping) = Helpers.ConvertOuterNodes(OuterNodes, NodeMappings);
             var stepError = (SimulationParmeters.MaxError - SimulationParmeters.MinError) / SimulationParmeters.StepError;
             var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 
@@ -100,61 +93,6 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             }
         }
 
-        static private GOMS.Token[] ParseGomsTokens(string source)
-        {
-            var tokens = new List<GOMS.Token>(source.Length);
-            foreach (var item in source)
-            {
-                switch (item)
-                {
-                    case 'M':
-                    case 'm':
-                        tokens.Add(GOMS.Token.menthal);
-                        break;
-                    case 'H':
-                    case 'h':
-                        tokens.Add(GOMS.Token.handMoving);
-                        break;
-                    case 'K':
-                    case 'k':
-                        tokens.Add(GOMS.Token.keyboard);
-                        break;
-                    case 'P':
-                    case 'p':
-                        tokens.Add(GOMS.Token.positioning);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return tokens.ToArray();
-        }
-
-        static private (GOMS.OuterNode[], (int, int, double)[]) ConvertOuterNodes(
-            Collection<OuterNodeModel> outerNodeModels,
-            Collection<NodeMappingModel> mappingModels)
-        {
-            var outerNodes = new GOMS.OuterNode[outerNodeModels.Count];
-            var nodeMapping = new (int, int, double)[mappingModels.Count];
-           
-            var nameIndexMatch = new Dictionary<string, int>();
-
-            for (int i = 0; i < outerNodes.Length; i++)
-            {
-                var current = outerNodeModels[i];
-                outerNodes[i] = new GOMS.OuterNode(
-                    isEndNode: current.IsEndNode,
-                    gomsTokens: ParseGomsTokens(current.GOMSChars));
-                nameIndexMatch.Add(current.Name, i);
-            }
-
-            for (int i = 0; i < nodeMapping.Length; i++)
-            {
-                var current = mappingModels[i];
-                nodeMapping[i] = (nameIndexMatch[current.FirstNode], nameIndexMatch[current.SecondNode], current.Weight);
-            }
-
-            return (outerNodes, nodeMapping);
-        }
+        
     }
 }

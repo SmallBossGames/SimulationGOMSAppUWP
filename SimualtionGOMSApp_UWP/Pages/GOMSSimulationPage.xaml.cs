@@ -27,7 +27,7 @@ namespace SimualtionGOMSApp_UWP.Pages
     {
         public GOMSSimulationPage()
         {
-            ViewModel = new MainPageViewModel();
+            ViewModel = new GOMSSimultionViewModel();
             this.InitializeComponent();
 
             MinErrorNumBox.Minimum = MaxErrorNumBox.Minimum = 0;
@@ -46,7 +46,7 @@ namespace SimualtionGOMSApp_UWP.Pages
                 MenthalTimeNumBox.Maximum = 1000000;
         }
 
-        MainPageViewModel ViewModel { get; }
+        GOMSSimultionViewModel ViewModel { get; }
 
         private void AddNode_Click(object sender, RoutedEventArgs e)
         {

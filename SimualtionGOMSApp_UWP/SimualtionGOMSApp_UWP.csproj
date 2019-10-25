@@ -143,7 +143,9 @@
     <Compile Include="SimulationWorkstation\ISimulationProcess.cs" />
     <Compile Include="SimulationWorkstation\ManagementProcess.cs" />
     <Compile Include="SimulationWorkstation\Workstation.cs" />
-    <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="ViewModel\GOMSSimultionViewModel.cs" />
+    <Compile Include="ViewModel\Helpers.cs" />
+    <Compile Include="ViewModel\WorkstationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
