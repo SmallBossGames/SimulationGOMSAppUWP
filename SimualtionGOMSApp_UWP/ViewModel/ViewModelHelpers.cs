@@ -6,21 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
+using SimualtionGOMSApp_UWP.SimulationWorkstation;
 
 namespace SimualtionGOMSApp_UWP.ViewModel
 {
-    public static class Helpers
+    public static class ViewModelHelpers
     {
-        static public (GOMS.OuterNode[], (int, int, double)[]) ConvertOuterNodes(
-            Collection<OuterNodeModel> outerNodeModels,
-            Collection<NodeMappingModel> mappingModels)
+        static public GOMS.OuterNode[] ConvertOuterNodes(Collection<OuterNodeModel> outerNodeModels)
         {
-            Contract.Requires(outerNodeModels != null && mappingModels != null);
+            Contract.Requires(outerNodeModels != null);
 
             var outerNodes = new GOMS.OuterNode[outerNodeModels.Count];
-            var nodeMapping = new (int, int, double)[mappingModels.Count];
-
-            var nameIndexMatch = new Dictionary<string, int>();
 
             for (int i = 0; i < outerNodes.Length; i++)
             {
@@ -28,16 +24,9 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 outerNodes[i] = new GOMS.OuterNode(
                     isEndNode: current.IsEndNode,
                     gomsTokens: ParseGomsTokens(current.GOMSChars));
-                nameIndexMatch.Add(current.Name, i);
             }
 
-            for (int i = 0; i < nodeMapping.Length; i++)
-            {
-                var current = mappingModels[i];
-                nodeMapping[i] = (nameIndexMatch[current.FirstNode], nameIndexMatch[current.SecondNode], current.Weight);
-            }
-
-            return (outerNodes, nodeMapping);
+            return outerNodes;
         }
 
         static public GOMS.Token[] ParseGomsTokens(string source)
@@ -71,6 +60,45 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 }
             }
             return tokens.ToArray();
+        }
+
+        static public GOMS.Parameters ConvertGOMSParameters(SimulationParmetersModel model)
+        {
+            Contract.Requires(model != null);
+
+            return new GOMS.Parameters(
+                keyboard: model.Keyboard,
+                handMoving: model.HandMoving,
+                menthal: model.Menthal,
+                positioning: model.Positioning);
+        }
+
+        static public Dictionary<string, int> BuildNameIndexMapper(Collection<OuterNodeModel> outerNodeModels)
+        {
+            Contract.Requires(outerNodeModels != null);
+
+            var dictionary = new Dictionary<string, int>();
+            for (int i = 0; i < outerNodeModels.Count; i++)
+            {
+                var current = outerNodeModels[i];
+                dictionary[current.Name] = i;
+            }
+            return dictionary;
+        }
+
+        static public (int, int, double)[] ConvertNodeMapping(Dictionary<string, int> nameIndexPairs, Collection<NodeMappingModel> mappingModels)
+        {
+            Contract.Requires(mappingModels != null && nameIndexPairs != null);
+
+            var nodeMapping = new (int, int, double)[mappingModels.Count];
+
+            for (int i = 0; i < nodeMapping.Length; i++)
+            {
+                var current = mappingModels[i];
+                nodeMapping[i] = (nameIndexPairs[current.FirstNode], nameIndexPairs[current.SecondNode], current.Weight);
+            }
+
+            return nodeMapping;
         }
     }
 }

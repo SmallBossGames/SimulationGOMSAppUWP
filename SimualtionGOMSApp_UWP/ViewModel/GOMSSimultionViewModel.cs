@@ -32,7 +32,17 @@ namespace SimualtionGOMSApp_UWP.ViewModel
                 new NodeMappingModel{FirstNode = "Пятый", SecondNode = "Второй", Weight=1.0},
                 new NodeMappingModel{FirstNode = "Шестой", SecondNode = "Пятый", Weight=1.0},
             };
-            SimulationParmeters = new SimulationParmetersModel();
+            SimulationParmeters = new SimulationParmetersModel()
+            {
+                Keyboard = 0.2,
+                Positioning = 1.1,
+                HandMoving = 0.6,
+                Menthal = 1.35,
+
+                MinError = 0.2,
+                MaxError = 0.8,
+                StepError = 7
+            };
         }
 
         public ObservableCollection<TimeFromErrorPair> TimeErrorPairs { get; }
@@ -43,20 +53,6 @@ namespace SimualtionGOMSApp_UWP.ViewModel
         public int SelectedOtherNodeIndex { get; set; }
         public int SelectedNodeMapIndex { get; set; }
 
-        public double Simulation(double errorPropability)
-        {
-            var parameters = new GOMS.Parameters(
-                keyboard: SimulationParmeters.Keyboard,
-                handMoving: SimulationParmeters.HandMoving,
-                menthal: SimulationParmeters.Menthal,
-                positioning: SimulationParmeters.Positioning);
-
-            var (outerNodes, mapping) = Helpers.ConvertOuterNodes(OuterNodes, NodeMappings);
-            var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
-
-            return GOMS.SimulationGOMS.Simulate(graph, errorPropability);
-        }
-
         public void SimulationRange()
         {
             const double simulationItCount = 1000; 
@@ -64,12 +60,11 @@ namespace SimualtionGOMSApp_UWP.ViewModel
             if (SimulationParmeters.StepError < 1)
                 return;
 
-            var parameters = new GOMS.Parameters(
-                keyboard: SimulationParmeters.Keyboard,
-                handMoving: SimulationParmeters.HandMoving,
-                menthal: SimulationParmeters.Menthal,
-                positioning: SimulationParmeters.Positioning);
-            var (outerNodes, mapping) = Helpers.ConvertOuterNodes(OuterNodes, NodeMappings);
+            var parameters = ViewModelHelpers.ConvertGOMSParameters(SimulationParmeters);
+            var nameIndexNodeMapper = ViewModelHelpers.BuildNameIndexMapper(OuterNodes);
+            var outerNodes = ViewModelHelpers.ConvertOuterNodes(OuterNodes);
+            var mapping = ViewModelHelpers.ConvertNodeMapping(nameIndexNodeMapper, NodeMappings);
+
             var stepError = (SimulationParmeters.MaxError - SimulationParmeters.MinError) / SimulationParmeters.StepError;
             var graph = GOMS.SimulationGOMS.BuildGraph(parameters, outerNodes, mapping);
 

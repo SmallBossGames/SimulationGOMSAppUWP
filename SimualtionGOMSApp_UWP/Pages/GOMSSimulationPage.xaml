@@ -22,16 +22,13 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Column="0" Padding="0 0 10 0">
             <StackPanel>
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <controls:DataGrid Grid.Row="0" x:Name="NodesDataGrid"
-                                   ItemsSource="{x:Bind ViewModel.OuterNodes}"
-                                   SelectedIndex="{x:Bind ViewModel.SelectedOtherNodeIndex, Mode=TwoWay}"
-                                   AutoGenerateColumns="False"
-                                   GridLinesVisibility="All">
+                <StackPanel Margin="5">
+                    <controls:DataGrid 
+                        x:Name="NodesDataGrid"
+                        ItemsSource="{x:Bind ViewModel.OuterNodes}"
+                        SelectedIndex="{x:Bind ViewModel.SelectedOtherNodeIndex, Mode=TwoWay}"
+                        AutoGenerateColumns="False"
+                        GridLinesVisibility="All">
                         <controls:DataGrid.Columns>
                             <controls:DataGridTextColumn
                             Header="Имя"
@@ -47,18 +44,14 @@
                             Binding="{Binding IsEndNode, Mode=TwoWay}"/>
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Width="Auto" 
+                    <StackPanel Orientation="Horizontal" 
                             HorizontalAlignment="Center" VerticalAlignment="Bottom">
                         <Button Margin="5" x:Name="AddNode" Click="AddNode_Click">Добавить</Button>
                         <Button Margin="5" x:Name="RemoveNode" Click="RemoveNode_Click">Удалить</Button>
                     </StackPanel>
-                </Grid>
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <controls:DataGrid Grid.Row="0"
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <controls:DataGrid
                                    ItemsSource="{x:Bind ViewModel.NodeMappings}"
                                    SelectedIndex="{x:Bind ViewModel.SelectedNodeMapIndex, Mode=TwoWay}"
                                    AutoGenerateColumns="False"
@@ -78,12 +71,12 @@
                             Binding="{Binding Weight, Mode=TwoWay}"/>
                         </controls:DataGrid.Columns>
                     </controls:DataGrid>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Width="Auto" 
+                    <StackPanel Orientation="Horizontal" 
                             HorizontalAlignment="Center" VerticalAlignment="Bottom">
                         <Button Margin="5" x:Name="AddMapping" Click="AddMapping_Click">Добавить</Button>
                         <Button Margin="5" x:Name="RemoveMapping" Click="RemoveMapping_Click">Удалить</Button>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -150,7 +143,6 @@
                         AllowNullValue="False"
                         ButtonsVisibility="Collapsed"/>
                     </controls:HeaderedContentControl>
-
                 </Grid>
             </StackPanel>
         </ScrollViewer>

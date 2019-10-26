@@ -120,6 +120,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\StringNumberConverter.cs" />
+    <Compile Include="Models\NotificatedModel.cs" />
+    <Compile Include="Models\WorkstationParametersModel.cs" />
     <Compile Include="Pages\GOMSSimulationPage.xaml.cs">
       <DependentUpon>GOMSSimulationPage.xaml</DependentUpon>
     </Compile>
@@ -139,12 +141,14 @@
     <Compile Include="SimualtionGOMS\Parameters.cs" />
     <Compile Include="SimualtionGOMS\SimulationGOMS.cs" />
     <Compile Include="SimulationWorkstation\ErrorFixProcess.cs" />
+    <Compile Include="SimulationWorkstation\ExecutionState.cs" />
     <Compile Include="SimulationWorkstation\Helpers.cs" />
     <Compile Include="SimulationWorkstation\ISimulationProcess.cs" />
     <Compile Include="SimulationWorkstation\ManagementProcess.cs" />
+    <Compile Include="SimulationWorkstation\WokstationParameters.cs" />
     <Compile Include="SimulationWorkstation\Workstation.cs" />
     <Compile Include="ViewModel\GOMSSimultionViewModel.cs" />
-    <Compile Include="ViewModel\Helpers.cs" />
+    <Compile Include="ViewModel\ViewModelHelpers.cs" />
     <Compile Include="ViewModel\WorkstationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

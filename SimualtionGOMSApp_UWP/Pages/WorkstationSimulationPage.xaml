@@ -5,10 +5,247 @@
     xmlns:local="using:SimualtionGOMSApp_UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
+    xmlns:telerikInput="using:Telerik.UI.Xaml.Controls.Input"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="60*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Column="0" Padding="0 0 10 0">
+            <StackPanel>
+                <StackPanel Margin="5">
+                    <controls:DataGrid 
+                        x:Name="NodesDataGrid"
+                        ItemsSource="{x:Bind ViewModel.OuterNodes}"
+                        SelectedIndex="{x:Bind ViewModel.SelectedOtherNodeIndex, Mode=TwoWay}"
+                        AutoGenerateColumns="False"
+                        GridLinesVisibility="All">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTextColumn
+                            Header="Имя"
+                            Width="30*"
+                            Binding="{Binding Name, Mode=TwoWay}"/>
+                            <controls:DataGridTextColumn
+                            Header="Символы GOMS"
+                            Width="45*"
+                            Binding="{Binding GOMSChars, Mode=TwoWay}"/>
+                            <controls:DataGridCheckBoxColumn
+                            Header="Конечный"
+                            Width="25*"
+                            Binding="{Binding IsEndNode, Mode=TwoWay}"/>
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                    <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button Margin="5" x:Name="AddNode" Click="AddNode_Click">Добавить</Button>
+                        <Button Margin="5" x:Name="RemoveNode" Click="RemoveNode_Click">Удалить</Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <controls:DataGrid
+                                   ItemsSource="{x:Bind ViewModel.NodeMappings}"
+                                   SelectedIndex="{x:Bind ViewModel.SelectedNodeMapIndex, Mode=TwoWay}"
+                                   AutoGenerateColumns="False"
+                                   GridLinesVisibility="All">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTextColumn
+                            Header="Первый узел"
+                            Width="40*"
+                            Binding="{Binding FirstNode, Mode=TwoWay}"/>
+                            <controls:DataGridTextColumn
+                            Header="Второй узел"
+                            Width="40*"
+                            Binding="{Binding SecondNode, Mode=TwoWay}"/>
+                            <controls:DataGridTextColumn
+                            Header="Вес"
+                            Width="20*"
+                            Binding="{Binding Weight, Mode=TwoWay}"/>
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                    <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Button Margin="5" x:Name="AddMapping" Click="AddMapping_Click">Добавить</Button>
+                        <Button Margin="5" x:Name="RemoveMapping" Click="RemoveMapping_Click">Удалить</Button>
+                    </StackPanel>
+                </StackPanel>
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <controls:HeaderedContentControl Header="Клавиатура" Grid.Column="0" Grid.Row="0" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="KeyboardTimeNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.Keyboard, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Позиционирование" Grid.Column="1" Grid.Row="0" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="PositionTimeNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.Positioning, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Перемещение рук" Grid.Column="0" Grid.Row="1" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="HandsTimeNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.HandMoving, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Обдумывание" Grid.Column="1" Grid.Row="1" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="MenthalTimeNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.Menthal, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                </Grid>
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <controls:HeaderedContentControl Header="Ошибка (мин)" Grid.Column="0" Grid.Row="0" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="MinErrorNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.MinError, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Ошибка (макс)" Grid.Column="1" Grid.Row="0" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="MaxErrorNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.MaxError, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Ошибка (шаги)" Grid.Column="0" Grid.Row="1" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="StepErrorNumBox"
+                        Value="{x:Bind ViewModel.SimulationParmeters.StepError, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Интервал времени" Grid.Column="1" Grid.Row="1" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="TimeIntervalNumBox"
+                        Value="{x:Bind ViewModel.TimeInterval, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                </Grid>
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="20" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="2">
+                        Параметры устранения неполадок
+                    </TextBlock>
+                    <TextBox 
+                        Header="Узел (имя)" 
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
+                        Text="{x:Bind ViewModel.FixParametersModel.RootNodeName}"
+                        />
+                    <controls:HeaderedContentControl Header="Мат. ожидание" Grid.Column="0" Grid.Row="2" Margin="2">
+                        <telerikInput:RadNumericBox
+                            x:Name="FixExpectedValueNumBox"
+                            Value="{x:Bind ViewModel.FixParametersModel.ExpectedValue, Mode=TwoWay}"
+                            AllowNullValue="False"
+                            ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Коефф. потерь" Grid.Column="1" Grid.Row="2" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="FixLossRatioNumBox"
+                        Value="{x:Bind ViewModel.FixParametersModel.LossRatio, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                </Grid>
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="20" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="2">
+                        Параметры управления
+                    </TextBlock>
+                    <TextBox 
+                        Header="Узел (имя)" 
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
+                        Text="{x:Bind ViewModel.ManParametersModel.RootNodeName}"
+                        />
+                    <controls:HeaderedContentControl Header="Мат. ожидание" Grid.Column="0" Grid.Row="2" Margin="2">
+                        <telerikInput:RadNumericBox
+                            x:Name="ManExpectedValueNumBox"
+                            Value="{x:Bind ViewModel.ManParametersModel.ExpectedValue, Mode=TwoWay}"
+                            AllowNullValue="False"
+                            ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                    <controls:HeaderedContentControl Header="Коефф. потерь" Grid.Column="1" Grid.Row="2" Margin="2">
+                        <telerikInput:RadNumericBox
+                        x:Name="ManLossRatioNumBox"
+                        Value="{x:Bind ViewModel.ManParametersModel.LossRatio, Mode=TwoWay}"
+                        AllowNullValue="False"
+                        ButtonsVisibility="Collapsed"/>
+                    </controls:HeaderedContentControl>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <Button x:Name="Simulate" HorizontalAlignment="Center" Margin="0 5 0 0" Grid.Row="1"
+                    Click="Simulate_Click">
+            Симуляция
+        </Button>
+        <telerikChart:RadCartesianChart Grid.Column="1" Grid.RowSpan="2" Margin="5" PaletteName="DefaultDark">
+            <telerikChart:ScatterLineSeries ItemsSource="{x:Bind ViewModel.TimeErrorPairs}">
+                <telerikChart:ScatterLineSeries.HorizontalAxis>
+                    <telerikChart:LinearAxis/>
+                </telerikChart:ScatterLineSeries.HorizontalAxis>
+                <telerikChart:ScatterLineSeries.VerticalAxis>
+                    <telerikChart:LinearAxis/>
+                </telerikChart:ScatterLineSeries.VerticalAxis>
+                <telerikChart:ScatterLineSeries.XValueBinding>
+                    <telerikChart:PropertyNameDataPointBinding PropertyName="Error"/>
+                </telerikChart:ScatterLineSeries.XValueBinding>
+                <telerikChart:ScatterLineSeries.YValueBinding>
+                    <telerikChart:PropertyNameDataPointBinding PropertyName="Time"/>
+                </telerikChart:ScatterLineSeries.YValueBinding>
+                <telerikChart:ScatterLineSeries.PointTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="20" Height="20"/>
+                    </DataTemplate>
+                </telerikChart:ScatterLineSeries.PointTemplate>
+            </telerikChart:ScatterLineSeries>
+        </telerikChart:RadCartesianChart>
     </Grid>
 </Page>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SimualtionGOMSApp_UWP.Models
 {
-    public class SimulationParmetersModel : INotifyPropertyChanged
+    public class SimulationParmetersModel : NotificatedModel
     {
         private double menthal;
         private double handMoving;
@@ -19,81 +19,46 @@ namespace SimualtionGOMSApp_UWP.Models
         private double maxError;
         private double stepError;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public double Keyboard
         {
             get => keyboard;
-            set
-            {
-                keyboard = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref keyboard, value);
         }
 
         public double Positioning
         {
             get => positioning;
-            set
-            {
-                positioning = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref positioning, value);
         }
 
         public double HandMoving
         {
             get => handMoving;
-            set
-            {
-                handMoving = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref handMoving, value);
         }
 
         public double Menthal
         {
             get => menthal;
-            set
-            {
-                menthal = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref menthal, value);
         }
 
         public double MinError
         {
             get => minError;
-            set
-            {
-                minError = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref minError, value);
         }
 
         public double MaxError
         {
             get => maxError;
-            set
-            {
-                maxError = value;
-                OnPropertyChanged();
-            }
+            set => SetMember(ref maxError, value);
         }
 
         public double StepError
         {
             get => stepError;
-            set
-            {
-                stepError = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public void OnPropertyChanged([CallerMemberName]string propertyName = null)
-        {
-            this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            set => SetMember(ref stepError, value);
         }
     }
 }

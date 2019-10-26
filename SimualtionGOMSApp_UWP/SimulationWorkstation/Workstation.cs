@@ -10,19 +10,15 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
     static class Workstation
     {
         public static double Simulate(
-            Node managementNode, 
-            Node fixNode,
-            double mangementMath,
-            double fixMath,
-            double managementLossRatio,
-            double fixLossRatio,
+            in WokstationParameters managementParams,
+            in WokstationParameters fixParams,
             double errorProbability,
             double timeInterval)
         {
             var random = new Random();
             var simProcesses = new ISimulationProcess[2];
-            var management = new ManagementProcess(managementNode, random, errorProbability, mangementMath);
-            var fix = new ErrorFixProcess(fixNode, random, errorProbability, fixMath, simProcesses);
+            var management = new ManagementProcess(managementParams, random, errorProbability);
+            var fix = new ErrorFixProcess(fixParams, random, errorProbability, simProcesses);
 
             simProcesses[0] = management;
             simProcesses[1] = fix;
@@ -49,7 +45,7 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
                 }
             }
 
-            var loss = management.ExecutionTime * managementLossRatio + fix.ExecutionTime * fixLossRatio;
+            var loss = management.Losses + fix.Losses;
 
             return loss;
         }

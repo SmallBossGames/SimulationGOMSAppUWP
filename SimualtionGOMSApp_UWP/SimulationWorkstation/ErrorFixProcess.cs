@@ -9,28 +9,25 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
 {
     class ErrorFixProcess : ISimulationProcess
     {
-        private readonly Node rootNode;
+        private readonly WokstationParameters parameters;
         private readonly Random random;
         private readonly double errorProbability;
-        private readonly double math;
-        private ISimulationProcess[] simulationProcesses;
+        private readonly ISimulationProcess[] simulationProcesses;
 
         private double executionStartTime;
 
         public ErrorFixProcess(
-            Node rootNode,
+            WokstationParameters parameters,
             Random random,
             double errorProbability,
-            double math,
             ISimulationProcess[] simulationProcesses)
         {
-            this.rootNode = rootNode;
+            this.parameters = parameters;
             this.random = random;
             this.errorProbability = errorProbability;
-            this.math = math;
             this.simulationProcesses = simulationProcesses;
 
-            NextEventTime = random.NextExponential(math);
+            NextEventTime = random.NextExponential(parameters.ExpectedValue);
             ExecutionState = ExecutionState.Stopped;
             ExecutionTime = 0.0;
         }
@@ -41,10 +38,16 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
 
         public double ExecutionTime { get; private set; }
 
+        public double Losses => ExecutionTime * parameters.LossRatio;
+
         public void RestartExecution(double time)
         {
-            NextEventTime = time + SimulationGOMS.Simulate(rootNode, errorProbability);
+            if (ExecutionState != ExecutionState.Running)
+                return;
+
+            NextEventTime = time + SimulationGOMS.Simulate(parameters.RootNode, errorProbability);
             ExecutionState = ExecutionState.Running;
+            Console.WriteLine("Error");
             RestartAllDependeties();
         }
 
@@ -52,7 +55,7 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
         {
             executionStartTime = NextEventTime;
 
-            NextEventTime += SimulationGOMS.Simulate(rootNode, errorProbability);
+            NextEventTime += SimulationGOMS.Simulate(parameters.RootNode, errorProbability);
             ExecutionState = ExecutionState.Running;
             RestartAllDependeties();
         }
@@ -60,7 +63,7 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
         public void StopExecution()
         {
             ExecutionTime += NextEventTime - executionStartTime;
-            NextEventTime += random.NextExponential(math);
+            NextEventTime += random.NextExponential(parameters.ExpectedValue);
             ExecutionState = ExecutionState.Stopped;
         }
 
@@ -68,7 +71,8 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
         {
             foreach (var item in simulationProcesses)
             {
-                item.RestartExecution(NextEventTime);
+                if (item != this)
+                    item.RestartExecution(NextEventTime);
             }
         }
     }
