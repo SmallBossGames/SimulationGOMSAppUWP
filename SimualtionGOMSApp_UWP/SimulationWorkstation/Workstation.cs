@@ -24,13 +24,16 @@ namespace SimualtionGOMSApp_UWP.SimulationWorkstation
             simProcesses[1] = fix;
 
             var time = 0.0;
-            while(time < timeInterval)
+            while(true)
             {
                 Array.Sort(simProcesses, (x, y) => x.NextEventTime.CompareTo(y.NextEventTime));
 
                 var simulationProcess = simProcesses[0];
                 
                 time = simulationProcess.NextEventTime;
+
+                if (time >= timeInterval)
+                    break;
 
                 switch (simulationProcess.ExecutionState)
                 {

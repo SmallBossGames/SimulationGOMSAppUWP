@@ -45,14 +45,15 @@ namespace SimualtionGOMSApp_UWP.Pages
             HandsTimeNumBox.Maximum =
                 KeyboardTimeNumBox.Maximum =
                 PositionTimeNumBox.Maximum =
-                MenthalTimeNumBox.Maximum = 
-                FixExpectedValueNumBox.Maximum=
+                MenthalTimeNumBox.Maximum = 1000000;
+
+            FixExpectedValueNumBox.Maximum =
                 FixLossRatioNumBox.Maximum =
                 ManExpectedValueNumBox.Maximum =
-                ManLossRatioNumBox.Maximum = 1000000;
+                ManLossRatioNumBox.Maximum = 1000000000;
 
             TimeIntervalNumBox.Minimum = 0;
-            TimeIntervalNumBox.Maximum = 1000000;
+            TimeIntervalNumBox.Maximum = 1000000000;
         }
 
         WorkstationViewModel ViewModel { get; }
